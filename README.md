@@ -63,6 +63,8 @@ The E1 Pro is equipped with the Bosch BME280 sensor, providing air pressure meas
 
 For highly accurate air quality measurements, the E1 Pro supports an optional Sensirion SCD40 add-on module. This add-on provides precise CO₂, temperature, and humidity readings and connects directly to the main PCB via a Molex mezzanine connector — no soldering required.
 
+> Note: An optional Bosch BME688 air quality add-on for the E1 Pro is currently in development and will be released soon. This add-on will enable monitoring of eCO₂, VOCs, IAQ, and gas resistance, providing broader air quality insight similar to the S1 Pro.
+
 **Ambient light and UV sensing**
 
 The integrated Lite-On LTR-390UV sensor measures both illuminance (Lux) and UV index (UVI), enabling smart lighting control and sun exposure awareness based on real-time ambient conditions.
