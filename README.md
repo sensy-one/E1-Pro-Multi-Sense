@@ -66,3 +66,104 @@ For highly accurate air quality measurements, the E1 Pro supports an optional Se
 **Ambient light and UV sensing**
 
 The integrated Lite-On LTR-390UV sensor measures both illuminance (Lux) and UV index (UVI), enabling smart lighting control and sun exposure awareness based on real-time ambient conditions.
+
+## ⚡ From Power On to Home Assistant
+
+The E1 Pro supports Power over Ethernet (PoE) and is automatically discovered by Home Assistant when connected via Ethernet.
+
+If PoE is not available, the device can be powered using 5V USB-C in combination with an RJ45 Ethernet connection.
+
+When using Wi-Fi mode, the E1 Pro can be powered via USB-C or PoE.  
+Wi-Fi setup is handled using Bluetooth (Improv) or the built-in access point.
+
+If your Home Assistant setup supports Bluetooth (Improv):
+- The E1 Pro will be automatically discovered under Devices & Services.
+- Click Add, enter your Wi-Fi credentials, and you're done.
+
+If Bluetooth is not available:
+- The E1 Pro will start a Wi-Fi access point named I am Sensy!.
+- Connect to it and open http://192.168.4.1 in your browser.
+- Enter your Wi-Fi details, click Save, and it will connect to your network.
+- The device will then appear in Home Assistant as a discovered device.
+
+## 📍 Best Placement Practices
+
+**Recommended mounting height**
+
+Wall mounting mode:
+- 1.6 to 2.6 meters from the floor
+
+Top-down (ceiling) mounting mode:
+- 2.0 to 3.0 meters from the floor
+
+**Placement tips:**
+- Ensure a clear line of sight to the monitored area — walls, plants, or furniture can reduce detection accuracy.
+- Avoid placing near large metal objects (such as fridges, pipes, or servers), as they can reflect mmWave signals.
+- Avoid direct airflow from HVAC vents or fans to maintain stable environmental readings.
+- Mount away from heat sources to prevent temperature distortion.
+
+## 🧪 CO₂ Calibration (SCD40 add-on)
+
+For faster or more precise calibration, you can use the Forced Calibration button in Home Assistant.
+
+**To calibrate CO₂ manually:**
+- Place the sensor in fresh outdoor air.
+- In Home Assistant, click Forced Calibration on the E1 Pro.
+- The sensor will set a new baseline of 426 ppm (current global outdoor CO₂ level).
+
+**Temperature offset:**
+The SCD40 temperature offset is factory-calibrated based on the enclosure design to compensate for internal heat. This offset can also be manually adjusted in Home Assistant if needed to fine-tune temperature accuracy for your environment.
+
+## 🎯 Get in the Zone
+
+The E1 Pro supports up to 3 detection zones and 1 exclusion zone — all configurable as custom polygons with up to 8 points each.  
+Instead of adjusting multiple number entities, zones can be configured visually using the Zone Editor tool.
+
+The Zone Editor is available as an official Home Assistant add-on or Docker image and can be found [here](https://github.com/sensy-one/home-assistant-addons).
+
+## 📶 Flashing Wi-Fi Firmware
+
+To switch the E1 to Wi-Fi mode, you need to flash the Wi-Fi factory firmware manually.
+
+**Flash Wi-Fi factory firmware**
+- Download the latest Wi-Fi factory firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- Connect the E1 to your computer using a USB-C cable.
+- Open the ESPHome web flasher: https://web.esphome.io/
+- Click Connect and select the correct COM port.
+- Choose Install and select the Wi-Fi factory firmware file you downloaded.
+- Once flashing is complete, disconnect and power the E1 using USB-C or PoE.
+- The E1 will start Wi-Fi provisioning using Bluetooth (Improv) or its built-in access point.
+
+## 🔄 Firmware on the Fly
+
+Keep your E1 up to date with regular OTA updates.  
+We continuously improve performance and add new features to keep your device reliable and future-ready.
+
+**Install OTA Updates**
+- Download the latest OTA firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- In Home Assistant, go to Devices & Services, ESPHome.
+- Select your E1 and click Visit under Device Info to open the web interface.
+- Scroll down to OTA Update, choose the firmware file, and click Update.
+
+> Tip: If the page times out during upload, simply refresh the page and try again.
+
+## 🛠 Troubleshooting
+
+If your sensor isn’t behaving as expected, reinstalling the factory firmware can help you start fresh.
+
+**Install Factory Firmware**
+- Download the latest factory firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- Connect the E1 to your computer using a USB-C cable.
+- Open the ESPHome web wizard: https://web.esphome.io/?dashboard_wizard
+- Click Connect and select the correct COM port.
+- Choose Install, select the firmware file you downloaded, and click Install again.
+
+## 💬 Let’s Connect
+
+Your feedback helps us improve. Whether you’ve found a bug, need help, or want to suggest a feature — we’re listening.
+
+**Discord**
+- Join the community and get support on our Discord server: https://discord.gg/TB78Wprn66
+
+**GitHub Issues**
+- Found a bug or have a suggestion? Report it on our GitHub issues page: https://github.com/sensy-one/E1-Pro-Multi-Sense/issues
