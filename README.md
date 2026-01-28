@@ -126,7 +126,7 @@ The Zone Editor is available as an official Home Assistant add-on or Docker imag
 To switch the E1 to Wi-Fi mode, you need to flash the Wi-Fi factory firmware manually.
 
 **Flash Wi-Fi factory firmware**
-- Download the latest Wi-Fi factory firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- Download the latest Wi-Fi factory firmware from the [releases page](https://github.com/sensy-one/E1-Pro-Multi-Sense/releases).
 - Connect the E1 to your computer using a USB-C cable.
 - Open the ESPHome web flasher: https://web.esphome.io/
 - Click Connect and select the correct COM port.
@@ -140,7 +140,7 @@ Keep your E1 up to date with regular OTA updates.
 We continuously improve performance and add new features to keep your device reliable and future-ready.
 
 **Install OTA Updates**
-- Download the latest OTA firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- Download the latest OTA firmware from the [releases page](https://github.com/sensy-one/E1-Pro-Multi-Sense/releases).
 - In Home Assistant, go to Devices & Services, ESPHome.
 - Select your E1 and click Visit under Device Info to open the web interface.
 - Scroll down to OTA Update, choose the firmware file, and click Update.
@@ -152,7 +152,7 @@ We continuously improve performance and add new features to keep your device rel
 If your sensor isn’t behaving as expected, reinstalling the factory firmware can help you start fresh.
 
 **Install Factory Firmware**
-- Download the latest factory firmware from the releases page: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases
+- Download the latest factory firmware from the [releases page](https://github.com/sensy-one/E1-Pro-Multi-Sense/releases).
 - Connect the E1 to your computer using a USB-C cable.
 - Open the ESPHome web wizard: https://web.esphome.io/?dashboard_wizard
 - Click Connect and select the correct COM port.
@@ -163,7 +163,7 @@ If your sensor isn’t behaving as expected, reinstalling the factory firmware c
 Your feedback helps us improve. Whether you’ve found a bug, need help, or want to suggest a feature — we’re listening.
 
 **Discord**
-- Join the community and get support on our Discord server: https://discord.gg/TB78Wprn66
+- Join the community and get support on our [Discord server](https://discord.gg/TB78Wprn66).
 
 **GitHub Issues**
-- Found a bug or have a suggestion? Report it on our GitHub issues page: https://github.com/sensy-one/E1-Pro-Multi-Sense/issues
+- Found a bug or have a suggestion? Report it on our [GitHub issues page](https://github.com/sensy-one/E1-Pro-Multi-Sense/issues).
