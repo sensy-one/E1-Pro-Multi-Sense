@@ -89,7 +89,7 @@ ethernet:
 #     ssid: "I am Sensy!"
 #     ap_timeout: 1min
 
-captive_portal: 
+# captive_portal: 
 
 esp32_ble_tracker:
   id: ble_tracker
