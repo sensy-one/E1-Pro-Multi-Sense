@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.0.0 (ETH)"  
+    version: "v1.1.0 (ETH)"  
 
   on_boot: 
     - priority: 600
@@ -44,7 +44,7 @@ esphome:
 
     - priority: 900
       then:
-        - delay: 4s
+        - delay: 5s
         - lambda: |-
             id(e1_sensor).query_all_settings();
 
@@ -62,10 +62,22 @@ script:
       - light.turn_off: ws2812_LED
       - lambda: 'id(onboarding_done) = true;'
 
+# external_components:
+#   - source:
+#       type: local
+#       path: components
+
 external_components:
   - source:
-      type: local
-      path: components
+      type: git
+      url: https://github.com/sensy-one/E1-Pro-Multi-Sense
+      ref: main
+      path: assets/source/components
+    components: [e1_pro]
+
+dashboard_import:
+  package_import_url: github://sensy-one/E1-Pro-Multi-Sense/assets/source/main_eth.yaml@main
+  import_full_config: true
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -91,6 +103,8 @@ ethernet:
 
 # captive_portal: 
 
+# improv_serial:
+
 esp32_ble_tracker:
   id: ble_tracker
   scan_parameters:
@@ -104,6 +118,7 @@ bluetooth_proxy:
 
 logger:
   level: NONE
+  baud_rate: 115200
 
 api:
   reboot_timeout: 0s
@@ -660,6 +675,7 @@ sensor:
 
   - platform: internal_temperature
     name: "ESP32 | Temperature"
+    id: esp32_internal_temperature
     entity_category: diagnostic
     icon: mdi:thermometer
 
@@ -1778,10 +1794,12 @@ number:
 binary_sensor:
   - platform: status
     name: "ESP32 | Status"
+    id: esp32_status
     entity_category: diagnostic
 
   - platform: template
     name: "Any Presence"
+    id: any_presence
     icon: mdi:home-account
     device_class: presence
     lambda: |-
@@ -1800,6 +1818,7 @@ binary_sensor:
 
   - platform: template
     name: "Zone 1 Presence"
+    id: zone1_presence
     icon: mdi:home-account
     device_class: presence
     lambda: |-
@@ -1844,6 +1863,7 @@ binary_sensor:
 
   - platform: template
     name: "Zone 2 Presence"
+    id: zone2_presence
     icon: mdi:home-account
     device_class: presence
     lambda: |-
@@ -1888,6 +1908,7 @@ binary_sensor:
 
   - platform: template
     name: "Zone 3 Presence"
+    id: zone3_presence
     icon: mdi:home-account
     device_class: presence
     lambda: |-
