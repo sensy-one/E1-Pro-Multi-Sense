@@ -76,7 +76,7 @@ external_components:
     components: [e1_pro]
 
 dashboard_import:
-  package_import_url: github://sensy-one/E1-Pro-Multi-Sense/assets/source/main_eth.yaml@main
+  package_import_url: github://sensy-one/E1-Pro-Multi-Sense/assets/source/main_wifi.yaml@main
   import_full_config: true
 
 esp32:
