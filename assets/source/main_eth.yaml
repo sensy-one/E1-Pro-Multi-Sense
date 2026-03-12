@@ -4,8 +4,8 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.0 (ETH)"  
-
+    version: "v1.1.2 (ETH)"  
+ 
   on_boot: 
     - priority: 600
       then: 
@@ -163,6 +163,11 @@ globals:
     type: bool
     restore_value: true
     initial_value: 'false'
+
+  - id: env_publish_live
+    type: bool
+    restore_value: true
+    initial_value: 'true'
 
 light:
   - platform: esp32_rmt_led_strip
@@ -367,6 +372,22 @@ select:
           id(e1_sensor).send_restart();      
 
 switch:
+
+  - platform: template
+    id: env_publish_live_switch
+    name: "MODE | Realtime"
+    icon: mdi:speedometer
+    entity_category: config
+    restore_mode: RESTORE_DEFAULT_ON
+    lambda: |-
+      return id(env_publish_live);
+    turn_on_action:
+      - lambda: |-
+          id(env_publish_live) = true;
+    turn_off_action:
+      - lambda: |-
+          id(env_publish_live) = false;
+
   - platform: template
     id: buzzer_switch
     name: "MLT8530 | Buzzer"
@@ -689,6 +710,18 @@ sensor:
       name: "SCD40 CO₂ Concentration"
       id: scd_co2
       icon: "mdi:molecule-co2"
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
       device_class: carbon_dioxide
       unit_of_measurement: "ppm"
       accuracy_decimals: 0
@@ -698,11 +731,35 @@ sensor:
       id: scd40_temp
       unit_of_measurement: "°C"
       icon: "mdi:thermometer"
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
     humidity:
       name: "SCD40 Humidity"
       id: scd40_rh
       unit_of_measurement: "%"
       icon: "mdi:water-percent"
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
 
   - platform: bme280_i2c
     i2c_id: i2c_bus
@@ -720,6 +777,18 @@ sensor:
       name: "BME280 Pressure"
       id: bme280_pressure
       unit_of_measurement: "hPa"
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
 
   - platform: ltr390
     i2c_id: i2c_bus
@@ -735,6 +804,17 @@ sensor:
               return x;
             }
             return x + id(ltr390_lux_offset).state;
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
 
     uv_index:
       name: "LTR390 UV Index"
@@ -746,6 +826,17 @@ sensor:
               return x;
             }
             return x + id(ltr390_uv_offset).state;
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
 
     gain:
       ambient_light: X1
