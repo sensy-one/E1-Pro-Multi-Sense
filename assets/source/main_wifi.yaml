@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.2 (WIFI)"  
+    version: "v1.1.3 (WIFI)"  
  
   on_boot: 
     - priority: 600
@@ -40,6 +40,10 @@ esphome:
         - lambda: |-
             if (!isnan(id(scd40_temp_offset).state)) {
               id(scd40_sensor)->set_temperature_offset((float) id(scd40_temp_offset).state);
+            }
+        - lambda: |-
+            if (!isnan(id(bme688_temp_offset).state)) {
+              id(bsec_virtual_sensor)->set_temperature_offset((float) id(bme688_temp_offset).state);
             }
 
     - priority: 900
@@ -157,6 +161,16 @@ output:
     pin: GPIO7
     frequency: 2700 Hz
     inverted: false
+
+bme68x_bsec2_i2c:
+  i2c_id: i2c_bus
+  id: bsec_virtual_sensor
+  address: 0x77
+  model: bme688
+  sample_rate: LP
+  supply_voltage: 3.3V
+  state_save_interval: 6h
+  operating_age: 4d
 
 globals:
   - id: onboarding_done
@@ -765,6 +779,7 @@ sensor:
     i2c_id: i2c_bus
     address: 0x76
     update_interval: 5s
+
     # temperature:
     #   name: "BME280 Temperature"
     #   id: bme280_temperature
@@ -773,10 +788,111 @@ sensor:
     #   name: "BME280 Humidity"
     #   id: bme280_humidity
     #   unit_of_measurement: "%"
+
     pressure:
       name: "BME280 Pressure"
       id: bme280_pressure
       unit_of_measurement: "hPa"
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
+
+  - platform: bme68x_bsec2
+    temperature:
+      name: "BME688 Temperature"
+      id: bme_temp
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};  
+    humidity:
+      name: "BME688 Humidity"
+      id: bme_rh
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
+    gas_resistance:
+      name: "BME688 Gas Resistance (kΩ)"
+      id: bme_gas_resistance_kohm
+      unit_of_measurement: "kΩ"
+      accuracy_decimals: 1
+      icon: mdi:omega
+      filters:
+        - multiply: 0.001
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
+    iaq:
+      name: "BME688 IAQ"
+      id: bme_iaq
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
+    co2_equivalent:
+      name: "BME688 CO₂ Equivalent"
+      id: bme_co2_eq
+      icon: "mdi:molecule-co2"
+      unit_of_measurement: "ppm"
+      accuracy_decimals: 0
+      state_class: measurement
+      filters:
+        - lambda: |-
+            if (id(env_publish_live)) {
+              return x;
+            }
+            static uint32_t last_publish = 0;
+            const uint32_t now = millis();
+            if (last_publish == 0 || (uint32_t)(now - last_publish) >= 60000) {
+              last_publish = now;
+              return x;
+            }
+            return {};
+    breath_voc_equivalent:
+      name: "BME688 VOC Equivalent"
+      id: bme_voc_eq
       filters:
         - lambda: |-
             if (id(env_publish_live)) {
@@ -1865,6 +1981,24 @@ number:
                 level: !lambda 'return x;'
 
   - platform: template
+    id: bme688_temp_offset
+    name: "BME688 Temp Offset"
+    icon: mdi:thermometer-plus
+    unit_of_measurement: "°C"
+    min_value: -50
+    max_value: 50
+    step: 0.01
+    initial_value: 12.43
+    optimistic: true
+    restore_value: true
+    mode: box
+    on_value:
+      - lambda: |-
+          if (!isnan(x)) {
+            id(bsec_virtual_sensor)->set_temperature_offset((float) x);
+          }
+
+  - platform: template
     id: scd40_temp_offset
     name: "SCD40 Temp Offset"
     icon: mdi:thermometer-plus
@@ -2041,3 +2175,39 @@ binary_sensor:
 
       if (pres) { last_off_3 = now; return true; }
       return (now - last_off_3) < (unsigned long)(id(zone3_presence_delay).state * 1000.0);
+
+text_sensor:
+
+  - platform: bme68x_bsec2
+    iaq_accuracy:
+      name: "BME688 IAQ Accuracy"
+
+  - platform: template
+    id: bme_iaq_classification
+    name: "BME688 IAQ Classification"
+    icon: mdi:air-filter
+    lambda: |-
+      if ( int(id(bme_iaq).state) <= 50) {
+        return {"Excellent"};
+      }
+      else if (int(id(bme_iaq).state) >= 51 && int(id(bme_iaq).state) <= 100) {
+        return {"Good"};
+      }
+      else if (int(id(bme_iaq).state) >= 101 && int(id(bme_iaq).state) <= 150) {
+        return {"Lightly polluted"};
+      }
+      else if (int(id(bme_iaq).state) >= 151 && int(id(bme_iaq).state) <= 200) {
+        return {"Moderately polluted"};
+      }
+      else if (int(id(bme_iaq).state) >= 201 && int(id(bme_iaq).state) <= 250) {
+        return {"Heavily polluted"};
+      }
+      else if (int(id(bme_iaq).state) >= 251 && int(id(bme_iaq).state) <= 350) {
+        return {"Severely polluted"};
+      }
+      else if (int(id(bme_iaq).state) >= 351) {
+        return {"Extremely polluted"};
+      }
+      else {
+        return {"error"};
+      }
