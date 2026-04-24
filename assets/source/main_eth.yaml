@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.4 (ETH)"  
+    version: "v1.1.5 (ETH)"  
  
   on_boot: 
     - priority: 600
