@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.5 (ETH)"  
+    version: "v1.1.6 (ETH)"  
  
   on_boot: 
     - priority: 600
@@ -83,6 +83,10 @@ dashboard_import:
   package_import_url: github://sensy-one/E1-Pro-Multi-Sense/assets/source/main_eth.yaml@main
   import_full_config: true
 
+# dashboard_import:
+#   package_import_url: github://sensy-one/E1-Pro-Multi-Sense/assets/source/main_wifi.yaml@main
+#   import_full_config: true
+
 esp32:
   board: esp32-c3-devkitm-1
   framework:
@@ -138,6 +142,26 @@ api:
 
 ota:
   - platform: web_server
+  - platform: http_request
+
+http_request:
+  timeout: 30s
+  watchdog_timeout: 60s
+  buffer_size_rx: 4096
+  buffer_size_tx: 1024
+
+update:
+  - platform: http_request
+    id: firmware_update
+    name: "ESP32 | Firmware Update"
+    source: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases/latest/download/manifest_eth.json
+    update_interval: 6h
+
+  # - platform: http_request
+  #   id: firmware_update
+  #   name: "ESP32 | Firmware Update"
+  #   source: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases/latest/download/manifest_wifi.json
+  #   update_interval: 6h
 
 web_server:
   version: 3
