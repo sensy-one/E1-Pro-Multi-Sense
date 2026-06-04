@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.6 (WIFI)"  
+    version: "v1.1.7 (WIFI)"  
  
   on_boot: 
     - priority: 600
@@ -104,6 +104,9 @@ esp32:
 #   interrupt_pin: GPIO3
 #   clock_speed: 10MHz
 
+esp32_improv:
+   authorizer: none
+
 wifi:
   ap:
     ssid: "I am Sensy!"
@@ -151,11 +154,11 @@ http_request:
   buffer_size_tx: 1024
 
 update:
-  # - platform: http_request
-  #   id: firmware_update
-  #   name: "ESP32 | Firmware Update"
-  #   source: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases/latest/download/manifest_eth.json
-  #   update_interval: 6h
+#   - platform: http_request
+#     id: firmware_update
+#     name: "ESP32 | Firmware Update"
+#     source: https://github.com/sensy-one/E1-Pro-Multi-Sense/releases/latest/download/manifest_eth.json
+#     update_interval: 6h
 
   - platform: http_request
     id: firmware_update
