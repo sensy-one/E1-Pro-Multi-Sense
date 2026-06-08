@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.6 (ETH)"  
+    version: "v1.1.7 (ETH)"  
  
   on_boot: 
     - priority: 600
@@ -104,6 +104,9 @@ ethernet:
   interrupt_pin: GPIO3
   clock_speed: 10MHz
 
+# esp32_improv:
+#    authorizer: none
+
 # wifi:
 #   ap:
 #     ssid: "I am Sensy!"
@@ -141,6 +144,7 @@ api:
             - lambda: '/* NaN */'
 
 ota:
+  - platform: esphome
   - platform: web_server
   - platform: http_request
 
@@ -2205,6 +2209,7 @@ text_sensor:
   - platform: bme68x_bsec2
     iaq_accuracy:
       name: "BME688 IAQ Accuracy"
+      id: bme_iaq_accuracy
 
   - platform: template
     id: bme_iaq_classification
