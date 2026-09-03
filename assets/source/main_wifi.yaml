@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.8 (WIFI)"  
+    version: "v1.1.9 (WIFI)"  
  
   on_boot: 
     - priority: 600
@@ -353,9 +353,9 @@ select:
     optimistic: true
     set_action:
       - lambda: |-
-          if (id(radar_installation_method).state == "Side") {
+          if (id(radar_installation_method).current_option() == "Side") {
             float angle = atof(x.c_str());
-            float height = atof(id(radar_installation_height).state.c_str());
+            float height = atof(id(radar_installation_height).current_option().c_str());
             id(e1_sensor).send_set_installation_params(height, angle);
           }
       - lambda: |-
@@ -383,9 +383,9 @@ select:
     set_action:
       - lambda: |-
           if (x == "0") return;
-          if (id(radar_installation_method).state == "Side") {
+          if (id(radar_installation_method).current_option() == "Side") {
             float height = atof(x.c_str());
-            float angle = atof(id(radar_installation_angle).state.c_str());
+            float angle = atof(id(radar_installation_angle).current_option().c_str());
             id(e1_sensor).send_set_installation_params(height, angle);
           }
       - lambda: |-
@@ -1007,7 +1007,7 @@ number:
     on_value:
       - lambda: |-
           if (x == 0) return;
-          if (id(radar_installation_method).state == "Side") {
+          if (id(radar_installation_method).current_option() == "Side") {
             float range_m = x / 100.0f;
             id(e1_sensor).send_set_detection_range(range_m, -60.0f, 60.0f);
           }
@@ -1030,7 +1030,7 @@ number:
     on_value:
       - lambda: |-
           if (x == 0) return;
-          if (id(radar_installation_method).state == "Top") {
+          if (id(radar_installation_method).current_option() == "Top") {
             float range_m = x / 100.0f;
             id(e1_sensor).send_set_detection_range(range_m, 0.0f, 360.0f);
           }
