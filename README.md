@@ -2,7 +2,7 @@
 
 The all-in-one presence and environmental sensor for Homey Pro and Home Assistant.
 
-![Sensy-One Banner](https://github.com/sensy-one/E1-Pro-Multi-Sense/blob/main/assets/images/E1_Pro_Multi_Sense.jpg)
+![Sensy-One Banner](https://github.com/sensy-one/E1-Pro-Multi-Sense/blob/main/assets/images/S1_Pro_Multi_Sense.webp)
 
 E1 Pro combines presence detection, air-quality monitoring and ambient light sensing in one compact device. It connects locally to Homey Pro or Home Assistant through ESPHome.
 
