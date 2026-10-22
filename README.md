@@ -1,23 +1,20 @@
 ## 🚀 Sensy-One E1 Pro Multi Sense
 
-The all-in-one open-source sensor designed for Home Assistant, refined through real-world user feedback.
+The all-in-one presence and environmental sensor for Homey Pro and Home Assistant.
 
 ![Sensy-One Banner](https://github.com/sensy-one/E1-Pro-Multi-Sense/blob/main/assets/images/E1_Pro_Multi_Sense.jpg)
 
-The Sensy-One E1 Pro Multi Sense is an open-source presence and environmental sensor, built from the ground up with Home Assistant in mind. After extensive prototyping, firmware tuning, and valuable input from users and smart home enthusiasts, the E1 Pro brings together reliable presence detection, real-time air quality monitoring, and ambient light sensing — all in one compact, Home Assistant-ready device!
+E1 Pro combines presence detection, air-quality monitoring and ambient light sensing in one compact device. It connects locally to Homey Pro or Home Assistant through ESPHome.
 
 ## ✨ Standout Specs
 
-**Seamless Home Assistant integration**
+**Local smart home integration**
 
-The E1 Pro is automatically discovered by Home Assistant when running in PoE (Ethernet) mode.
-
-If you choose the Wi-Fi firmware, the device will be automatically discovered via BLE Improv.  
-If BLE discovery is not available or fails, the E1 Pro will start its own wireless access point to complete the setup and connect the sensor to Home Assistant — no additional tools required.
+Connect E1 Pro to Homey Pro or Home Assistant over your local network using ESPHome. Follow [Getting Started](#-getting-started) to set up your connection and add the sensor.
 
 **Powered by ESP32-C3**
 
-At its core, the E1 Pro uses the ESP32-C3 module — offering reliable Wi-Fi, Bluetooth Low Energy, and Ethernet support, low power consumption, and full compatibility with ESPHome and Home Assistant integrations.
+At its core, the E1 Pro uses the ESP32-C3 module — offering reliable Wi-Fi, Bluetooth Low Energy, and Ethernet support, low power consumption, and compatibility with ESPHome, Homey Pro and Home Assistant.
 
 **Modular mounting options**
 
@@ -49,9 +46,11 @@ The E1 Pro includes a built-in BLE Proxy for Bluetooth-based presence and proxim
 
 The E1 Pro features four front-facing full-color RGB LEDs, providing clear visual feedback for status indication, presence detection, alerts, and ambient lighting effects.
 
+In Homey, use the sensor's LED Flow cards to set power, colour and brightness. In Home Assistant, use its light entity.
+
 **Built-in buzzer**
 
-The integrated MLT-8530 buzzer delivers clear audio alerts at 80–90 dB and 2.7 kHz, perfect for notifications, warnings, or presence feedback.
+The integrated MLT-8530 buzzer delivers clear audio alerts at 80–90 dB and 2.7 kHz, perfect for notifications, warnings, or presence feedback. In Homey, use the buzzer Flow cards; in Home Assistant, use its switch.
 
 **Comprehensive environmental monitoring**
 
@@ -69,24 +68,25 @@ For highly accurate air quality measurements, the E1 Pro supports an optional Se
 
 The integrated Lite-On LTR-390UV sensor measures both illuminance (Lux) and UV index (UVI), enabling smart lighting control and sun exposure awareness based on real-time ambient conditions.
 
-## ⚡ From Power On to Home Assistant
+## ⚡ Getting Started
 
-The E1 Pro supports Power over Ethernet (PoE) and is automatically discovered by Home Assistant when connected via Ethernet.
+### Connect to your network
 
-If PoE is not available, the device can be powered using 5V USB-C in combination with an RJ45 Ethernet connection.
+Connect E1 Pro to your network with an Ethernet cable. Use PoE for power, or a 5 V USB-C supply alongside Ethernet.
 
-When using Wi-Fi mode, the E1 Pro can be powered via USB-C or PoE.  
-Wi-Fi setup is handled using Bluetooth (Improv) or the built-in access point.
+If you use the [Wi-Fi firmware](#-flashing-wi-fi-firmware), connect to the **I am Sensy!** access point, open `http://192.168.4.1`, and save your 2.4 GHz Wi-Fi credentials.
 
-If your Home Assistant setup supports Bluetooth (Improv):
-- The E1 Pro will be automatically discovered under Devices & Services.
-- Click Add, enter your Wi-Fi credentials, and you're done.
+### Add to Homey Pro
 
-If Bluetooth is not available:
-- The E1 Pro will start a Wi-Fi access point named I am Sensy!.
-- Connect to it and open http://192.168.4.1 in your browser.
-- Enter your Wi-Fi details, click Save, and it will connect to your network.
-- The device will then appear in Home Assistant as a discovered device.
+1. Install the [SENSY-ONE app](https://homey.app/en-nl/app/com.sensy-one/SENSY-ONE/test/).
+2. Make sure E1 Pro and Homey Pro are on the same local network.
+3. In Homey, select **Devices → + → SENSY-ONE → E1 Pro**, then choose your sensor.
+
+Measurements are available in Flows and Insights. Home Assistant is not required. The app is under review and can already be installed through the test link above.
+
+### Add to Home Assistant
+
+Once connected to your network, E1 Pro appears under **Settings → Devices & services**. Select the discovered ESPHome device and complete the setup.
 
 ## 📍 Best Placement Practices
 
@@ -106,22 +106,27 @@ Top-down (ceiling) mounting mode:
 
 ## 🧪 CO₂ Calibration (SCD40 add-on)
 
-For faster or more precise calibration, you can use the Forced Calibration button in Home Assistant.
+In Homey, use the SCD40 calibration control in the sensor's advanced settings and follow its instructions.
 
-**To calibrate CO₂ manually:**
+**In Home Assistant:**
 - Place the sensor in fresh outdoor air.
 - In Home Assistant, click Forced Calibration on the E1 Pro.
 - The sensor will set a new baseline of 426 ppm (current global outdoor CO₂ level).
 
 **Temperature offset:**
-The SCD40 temperature offset is factory-calibrated based on the enclosure design to compensate for internal heat. This offset can also be manually adjusted in Home Assistant if needed to fine-tune temperature accuracy for your environment.
+The SCD40 temperature offset is factory-calibrated based on the enclosure design to compensate for internal heat. Adjust it in the sensor's advanced settings in Homey or through its offset entity in Home Assistant.
 
 ## 🎯 Get in the Zone
 
-The E1 Pro supports up to 3 detection zones and 1 exclusion zone — all configurable as custom polygons with up to 8 points each.  
-Instead of adjusting multiple number entities, zones can be configured visually using the Zone Editor tool.
+E1 Pro supports three detection zones and one exclusion zone, drawn as polygons with up to eight points.
 
-The Zone Editor is available as an official Home Assistant add-on or Docker image and can be found [here](https://github.com/sensy-one/home-assistant-addons).
+### Homey Pro
+
+Open **Settings → Apps → SENSY-ONE → App settings** in Homey. Select your sensor, draw the zones and save. Presence and target-count readings appear for each configured detection zone.
+
+### Home Assistant
+
+Use the [SENSY-ONE Zone Editor](https://github.com/sensy-one/home-assistant-addons), available as a Home Assistant add-on or Docker image.
 
 ## 📶 Flashing Wi-Fi Firmware
 
@@ -143,13 +148,14 @@ We continuously improve performance and add new features to keep your device rel
 
 **Install OTA Updates**
 - Download the latest OTA firmware from the [releases page](https://github.com/sensy-one/E1-Pro-Multi-Sense/releases).
-- In Home Assistant, go to Devices & Services, ESPHome.
-- Select your E1 and click Visit under Device Info to open the web interface.
+- Open the sensor's local IP address in your browser. In Home Assistant, you can also use **Visit** on its ESPHome device page.
 - Scroll down to OTA Update, choose the firmware file, and click Update.
 
 > Tip: If the page times out during upload, simply refresh the page and try again.
 
 ## 🛠 Troubleshooting
+
+**Not found in Homey?** Check that the sensor and Homey Pro are on the same local network and that mDNS discovery is allowed.
 
 If your sensor isn’t behaving as expected, reinstalling the factory firmware can help you start fresh.
 
