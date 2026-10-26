@@ -62,8 +62,6 @@ The E1 Pro is equipped with the Bosch BME280 sensor, providing air pressure meas
 
 For highly accurate air quality measurements, the E1 Pro supports an optional Sensirion SCD40 add-on module. This add-on provides precise CO₂, temperature, and humidity readings and connects directly to the main PCB via a Molex mezzanine connector — no soldering required.
 
-> Note: An optional Bosch BME688 air quality add-on for the E1 Pro is currently in development and will be released soon. This add-on will enable monitoring of eCO₂, VOCs, IAQ, and gas resistance, providing broader air quality insight similar to the S1 Pro.
-
 **Ambient light and UV sensing**
 
 Earlier E1 Pro units use the Lite-On LTR-390UV with illuminance (Lux) and UV index (UVI); newer units use the LTR-F216A with illuminance only. At startup, the firmware reads the sensor's full PART_ID at I²C address `0x53`, register `0x06`. UVI is exposed only for the documented LTR390 ID (`0xB2`); the LTR-F216A (`0xB1`), an unrecognized ID, or a failed read hides UVI and disables UV sampling. The existing lux calculation, calibration, entity names, and IDs are preserved. The UV-offset control is unchanged.
