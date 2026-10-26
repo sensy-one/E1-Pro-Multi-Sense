@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.9 (WIFI)"  
+    version: "v1.1.10 (WIFI)"
  
   on_boot: 
     - priority: 600
@@ -18,6 +18,21 @@ esphome:
                   effect: "Purple Breathing"
             else: 
               - lambda: '/* NaN */'
+
+    - priority: 700
+      then:
+        - lambda: |-
+            // Run after I2C setup (1000), before LTR390 (600) and the API (200).
+            // Full PART_ID: LTR390 = 0xB2, LTR-F216A = 0xB1.
+            const uint8_t part_id_register = 0x06;
+            uint8_t part_id = 0;
+            const auto error = id(i2c_bus).write_readv(
+                0x53, &part_id_register, 1, &part_id, 1);
+            const bool has_uv = error == i2c::ERROR_OK && part_id == 0xB2;
+            if (!has_uv) {
+              id(ltr390_uv_raw).set_internal(true);
+              id(ltr390_sensor).set_uvi_sensor(nullptr);
+            }
 
     - priority: 750
       then: 
@@ -253,6 +268,7 @@ button:
 
   - platform: template
     name: "SCD40 | Forced Calibration"
+    disabled_by_default: true
     id: scd40_forced_calibration_btn
     icon: "mdi:tune"
     entity_category: config
@@ -263,6 +279,7 @@ button:
 
   - platform: template
     name: "SCD40 | Factory Reset"
+    disabled_by_default: true
     id: scd40_factory_reset_btn
     icon: "mdi:factory"
     entity_category: config
@@ -750,6 +767,7 @@ sensor:
     update_interval: 5s      
     co2:
       name: "SCD40 CO₂ Concentration"
+      disabled_by_default: true
       id: scd_co2
       icon: "mdi:molecule-co2"
       filters:
@@ -770,6 +788,7 @@ sensor:
       state_class: measurement
     temperature:
       name: "SCD40 Temperature"
+      disabled_by_default: true
       id: scd40_temp
       unit_of_measurement: "°C"
       icon: "mdi:thermometer"
@@ -787,6 +806,7 @@ sensor:
             return {};
     humidity:
       name: "SCD40 Humidity"
+      disabled_by_default: true
       id: scd40_rh
       unit_of_measurement: "%"
       icon: "mdi:water-percent"
@@ -837,6 +857,7 @@ sensor:
   - platform: bme68x_bsec2
     temperature:
       name: "BME688 Temperature"
+      disabled_by_default: true
       id: bme_temp
       filters:
         - lambda: |-
@@ -852,6 +873,7 @@ sensor:
             return {};  
     humidity:
       name: "BME688 Humidity"
+      disabled_by_default: true
       id: bme_rh
       filters:
         - lambda: |-
@@ -867,6 +889,7 @@ sensor:
             return {};
     gas_resistance:
       name: "BME688 Gas Resistance (kΩ)"
+      disabled_by_default: true
       id: bme_gas_resistance_kohm
       unit_of_measurement: "kΩ"
       accuracy_decimals: 1
@@ -886,6 +909,7 @@ sensor:
             return {};
     iaq:
       name: "BME688 IAQ"
+      disabled_by_default: true
       id: bme_iaq
       filters:
         - lambda: |-
@@ -901,6 +925,7 @@ sensor:
             return {};
     co2_equivalent:
       name: "BME688 CO₂ Equivalent"
+      disabled_by_default: true
       id: bme_co2_eq
       icon: "mdi:molecule-co2"
       unit_of_measurement: "ppm"
@@ -920,6 +945,7 @@ sensor:
             return {};
     breath_voc_equivalent:
       name: "BME688 VOC Equivalent"
+      disabled_by_default: true
       id: bme_voc_eq
       filters:
         - lambda: |-
@@ -935,6 +961,7 @@ sensor:
             return {};
 
   - platform: ltr390
+    id: ltr390_sensor
     i2c_id: i2c_bus
     update_interval: 5s
 
@@ -2011,6 +2038,7 @@ number:
   - platform: template
     id: bme688_temp_offset
     name: "BME688 Temp Offset"
+    disabled_by_default: true
     icon: mdi:thermometer-plus
     unit_of_measurement: "°C"
     min_value: -50
@@ -2029,6 +2057,7 @@ number:
   - platform: template
     id: scd40_temp_offset
     name: "SCD40 Temp Offset"
+    disabled_by_default: true
     icon: mdi:thermometer-plus
     unit_of_measurement: "°C"
     min_value: -50
@@ -2209,13 +2238,19 @@ text_sensor:
   - platform: bme68x_bsec2
     iaq_accuracy:
       name: "BME688 IAQ Accuracy"
+      disabled_by_default: true
       id: bme_iaq_accuracy
 
   - platform: template
     id: bme_iaq_classification
     name: "BME688 IAQ Classification"
+    disabled_by_default: true
     icon: mdi:air-filter
     lambda: |-
+      // An absent add-on has no valid IAQ state; never convert NaN to an integer.
+      if (!id(bme_iaq).has_state() || !std::isfinite(id(bme_iaq).state)) {
+        return {"unknown"};
+      }
       if ( int(id(bme_iaq).state) <= 50) {
         return {"Excellent"};
       }

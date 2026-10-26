@@ -66,7 +66,9 @@ For highly accurate air quality measurements, the E1 Pro supports an optional Se
 
 **Ambient light and UV sensing**
 
-The integrated Lite-On LTR-390UV sensor measures both illuminance (Lux) and UV index (UVI), enabling smart lighting control and sun exposure awareness based on real-time ambient conditions.
+Earlier E1 Pro units use the Lite-On LTR-390UV with illuminance (Lux) and UV index (UVI); newer units use the LTR-F216A with illuminance only. At startup, the firmware reads the sensor's full PART_ID at I²C address `0x53`, register `0x06`. UVI is exposed only for the documented LTR390 ID (`0xB2`); the LTR-F216A (`0xB1`), an unrecognized ID, or a failed read hides UVI and disables UV sampling. The existing lux calculation, calibration, entity names, and IDs are preserved. The UV-offset control is unchanged.
+
+If Home Assistant already registered a UVI entity on a unit without UV hardware, that old entry may remain unavailable after updating. Disable that entry once in Home Assistant; newly discovered units without UV hardware will not offer a UVI entity.
 
 ## ⚡ Getting Started
 
@@ -87,6 +89,10 @@ Measurements are available in Flows and Insights. Home Assistant is not required
 ### Add to Home Assistant
 
 Once connected to your network, E1 Pro appears under **Settings → Devices & services**. Select the discovered ESPHome device and complete the setup.
+
+SCD40 and BME688 add-on entities are disabled by default, including their calibration and temperature-offset controls. If you use an add-on, open the E1 Pro device in Home Assistant, show its disabled entities, and enable the entities for the installed module. The BME688 IAQ classification remains `unknown` until a valid IAQ measurement is available.
+
+This default applies when Home Assistant first adds the entities. Existing entities keep their enabled/disabled setting after a firmware update. Home Assistant can also restore that setting when a device is removed and added again, so removing the device or performing a factory reset does not reliably apply the new default. Disable unused add-on entities manually if needed.
 
 ## 📍 Best Placement Practices
 
