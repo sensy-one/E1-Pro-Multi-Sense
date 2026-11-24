@@ -4,7 +4,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: "Sensy-One.E1 Pro Multi Sense" 
-    version: "v1.1.10 (ETH)"
+    version: "v1.1.11 (ETH)"
  
   on_boot: 
     - priority: 600
@@ -119,7 +119,7 @@ ethernet:
   interrupt_pin: GPIO3
   clock_speed: 10MHz
 
-# esp32_improv:
+# improv_ble:
 #    authorizer: none
 
 # wifi:
@@ -144,6 +144,7 @@ bluetooth_proxy:
 
 logger:
   level: NONE
+  boot_log_level: NONE
   baud_rate: 115200
 
 api:
@@ -234,7 +235,7 @@ light:
     chipset: WS2812
     pin: GPIO0
     num_leds: 14
-    rgb_order: GRB
+    channel_colors: GRB
     restore_mode: RESTORE_DEFAULT_OFF
     effects:
       - addressable_lambda:
